@@ -1,12 +1,14 @@
 package ru.yandex.rrmstu.hash;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.Random;
 
 /**
  * <h3>HASH</h3>
@@ -24,7 +26,6 @@ import java.util.Arrays;
 
 public class Main {
 
-
     Main() {
 
     }
@@ -38,13 +39,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
-
-        System.out.println("Вариант: 2");
-        System.out.println(Arrays.toString(ConvertDataToByte.getArrayForFile("D://message.txt")));
-
-        WorkingWithFiles.SaveFile("Test.txt", ConvertDataToByte.arrayForFile);
-
-        WorkingWithFiles.OpenFile("D://message.txt");
+        System.out.println("Вариант: 2\n");
+        CreatingKey.setPQN();
     }
 }
 
@@ -99,25 +95,31 @@ class ConvertDataToByte {
 class WorkingWithFiles {
 
     /**
+     * <cede>OpenFile</cede>
      * <p>Данный метод работает только с текстовыми файлами!</p>
      *
-     * @param pathToFile
+     * @param pathToFile - Путь к файлу, который требуется открыть.
+     * @return Если файл был найден то возвращает содержание текста, в ином случае ошибку что файл был не найден.
      */
 
-    public static void OpenFile(String pathToFile) {
-
+    @Nullable
+    public static String OpenFile(String pathToFile) {
+        String line = null;
         try (InputStream in = Files.newInputStream(Paths.get(pathToFile));
              BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-            String line = null;
+
             while ((line = reader.readLine()) != null)
-                System.out.println(line);
+                return line;
 
         } catch (IOException ioe) {
-            System.err.println(ioe);
+            return "Файл был не найден!\nОшибка {" + String.valueOf(ioe) + "}";
         }
+        return null;
     }
 
     /**
+     * <code>SaveFile</code>
+     *
      * @param nameFile - Название файла с его раширением.
      * @param data     - Данные которые будут записаны в файл.
      */
@@ -137,14 +139,31 @@ class WorkingWithFiles {
 
 class CreatingKey {
 
-    public static long p = 0L;
+    public static long p = 6L;
     public static long q = 0L;
     public static long n = 0L;
+    public static byte[] endBytes = null;
+
+    public static Random random = new Random();
+
 
     public static void setPQN() {
 
+        int MIN = Integer.MIN_VALUE;
+        int MAX = Integer.MAX_VALUE;
+        long randomBaseForP = p;
 
-        p = 1L;
+        while (true) {
+            randomBaseForP = -1 * (MIN + random.nextInt(MAX));
+            System.out.println(randomBaseForP);
+            if (isPrime(p) == true) {
+                System.out.println("P: " + p);
+                break;
+            } else {
+                p = randomBaseForP;
+            }
+        }
+
         System.out.printf("P = %d\nQ = %d\nN = %d\n", p, q, n);
     }
 
@@ -157,14 +176,15 @@ class CreatingKey {
 
     public static boolean isPrime(long number) {
         if (number == 1L) return false;
-        else
-            for (long i = 2L; i * i <= Math.sqrt(number); i++)
-                if (number % i == 0L)
-                    return false;
+        for (long i = 2L; i * i <= number; i++)
+            if (number % i == 0L)
+                return false;
         return true;
     }
 
     public static long publicKey() {
+
+
         return 0L;
     }
 
