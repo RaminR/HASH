@@ -44,7 +44,7 @@ public class Main {
 
         WorkingWithFiles.SaveFile("Test.txt", ConvertDataToByte.arrayForFile);
 
-        WorkingWithFiles.OpenFile("D://mыessage.txt");
+        WorkingWithFiles.OpenFile("D://message.txt");
     }
 }
 
