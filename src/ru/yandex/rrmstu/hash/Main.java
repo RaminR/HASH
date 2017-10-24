@@ -215,7 +215,7 @@ class CreatingKey {
     }
 
     public static long SearchE(long d, long m) {
-        long e = 10L;
+        long e = 0L;
 
         while (true) {
             if ((e * d) % m == 1L)
