@@ -26,21 +26,30 @@ import java.util.Random;
 
 public class Main {
 
-    Main() {
-
-    }
-
-    Main(String pathToFile, String pathToPublicKey) {
-
-    }
-
-    Main(String localhost) {
-
-    }
 
     public static void main(String[] args) {
         System.out.println("Вариант: 2\n");
         CreatingKey.setPQN();
+    }
+}
+
+/**
+ *
+ *
+ */
+class SignData {
+    SignData(String fileName, String keyFile) {
+
+    }
+}
+
+/**
+ *
+ *
+ */
+class VerifyData {
+    VerifyData(String fileName, String keyFile) {
+
     }
 }
 
@@ -64,7 +73,6 @@ class ConvertDataToByte {
      * @param filePath - Путь к файлу, который треубется записать в массив байтов.
      * @return Возвращает массив байтов.
      */
-
     public static byte[] getArrayForFile(String filePath) {
         try {
             arrayForFile = Files.readAllBytes(Paths.get(filePath));
@@ -91,7 +99,6 @@ class ConvertDataToByte {
  * <cede>WorkingWithFiles</cede>
  * Working with file's
  */
-
 class WorkingWithFiles {
 
     /**
@@ -136,35 +143,88 @@ class WorkingWithFiles {
 /**
  * <code>CreatingKey</code>
  */
-
 class CreatingKey {
 
-    public static long p = 6L;
-    public static long q = 0L;
-    public static long n = 0L;
-    public static byte[] endBytes = null;
+    public static long p = 1L;
+    public static long q = 1L;
+    public static long n = 1L;
+    public static long fN = 1L;
+    public static long d = 1L;
+    public static long e = 1L;
 
     public static Random random = new Random();
 
-
+    /**
+     * <code>setPQN</code>
+     * <p></p>
+     */
     public static void setPQN() {
 
         int MIN = Integer.MIN_VALUE;
         int MAX = Integer.MAX_VALUE;
-        long randomBaseForP = p;
+        long randomBaseForP, randomBaseForQ;
 
         while (true) {
-            randomBaseForP = -1 * (MIN + random.nextInt(MAX));
-            System.out.println(randomBaseForP);
-            if (isPrime(p) == true) {
-                System.out.println("P: " + p);
+            randomBaseForP = 7L;
+            randomBaseForQ = 13L;
+//            randomBaseForP = -1L * (MIN + random.nextInt(MAX));
+//            randomBaseForQ = -1L * (MIN + random.nextInt(MAX));
+
+            if ((isPrime(p) && isPrime(q)) == true) {
                 break;
             } else {
                 p = randomBaseForP;
+                q = randomBaseForQ;
             }
         }
+        n = p * q;
+        fN = (p - 1L) * (q - 1L);
+        d = SearchD(fN);
+        e = SearchE(d, fN);
 
-        System.out.printf("P = %d\nQ = %d\nN = %d\n", p, q, n);
+        while (checkGsd(fN, e) != 1) {
+            e++;
+        }
+
+        System.out.println("Шаг 1. Генерация простых чисел.");
+        System.out.printf("p = %d\nq = %d\nn = %d\nf(n) = %d\nd = %d\ne = %d\n", p, q, n, fN, d, e);
+    }
+
+    public static long SearchD(long m) {
+        long d = m - 1L;
+
+        for (long i = 2L; i <= m; i++)
+            if ((m % i == 0L) && (d % i == 0L)) //если имеют общие делители
+            {
+                d--;
+                i = 1L;
+            }
+
+        return d;
+    }
+
+    public static long checkGsd(long a, long b) {
+        while (a != 0 && b != 0) {
+            if (a > b) {
+                a = a % b;
+            } else {
+                b = b % a;
+            }
+        }
+        return a + b;
+    }
+
+    public static long SearchE(long d, long m) {
+        long e = 10L;
+
+        while (true) {
+            if ((e * d) % m == 1L)
+                break;
+            else
+                e++;
+        }
+
+        return e;
     }
 
     /**
@@ -173,7 +233,6 @@ class CreatingKey {
      * @param number - Число которое проверяем является ли оно простым
      * @return Возвращает истину или ложь
      */
-
     public static boolean isPrime(long number) {
         if (number == 1L) return false;
         for (long i = 2L; i * i <= number; i++)
