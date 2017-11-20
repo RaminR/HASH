@@ -16,8 +16,6 @@ public class Main {
         hash.getInstance();
         hash.encryptData("data.txt");
 
-
-        System.out.println();
     }
 
 }

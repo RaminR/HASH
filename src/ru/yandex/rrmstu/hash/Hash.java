@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
@@ -176,7 +175,7 @@ public class Hash {
      * @param nameFile - Название файла с его раширением.
      * @param data     - Данные которые будут записаны в файл.
      */
-    private static void saveFile(String nameFile, byte[] data) {
+    public static void saveFile(String nameFile, byte[] data) {
         try {
             System.out.println("Ваш файл был записан в корень проекта под названием: " + nameFile);
             Files.write(Paths.get(nameFile), data);
@@ -315,3 +314,6 @@ public class Hash {
         S = Math.pow(H, D) % N;
         return S;
     }
+
+
+}
